@@ -182,10 +182,10 @@ set_default_shell() {
 		return
 	fi
 
-	if chsh -s "$zsh_path" "$CURRENT_USER"; then
+	if $SUDO -n chsh -s "$zsh_path" "$CURRENT_USER" 2>/dev/null; then
 		log_success "Default shell updated to zsh."
 	else
-		log_warning "Failed to change default shell automatically. Run: chsh -s $(which zsh)"
+		log_warning "Failed to change default shell automatically. Run: sudo chsh -s $(which zsh) $CURRENT_USER"
 	fi
 }
 

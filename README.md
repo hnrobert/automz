@@ -24,11 +24,18 @@ The script installs needed dependencies (git, curl, etc.) if they are missing. W
 
 ## Test inside a container (Ubuntu 22.04)
 
-The compose file uses the upstream `ubuntu:22.04`, creates a non-root user `dev`, installs `sudo`, runs the installer as `dev`, and leaves you in `zsh`.
+The compose file uses upstream `ubuntu:22.04`, creates non-root user `dev`, installs `sudo`, and runs the installer as `dev` **only once**. The container then idles.
+
+Start and view logs:
 
 ```bash
-docker-compose up -d
-docker-compose exec hnrobert-omz-installer-test zsh
+docker-compose up -d && docker-compose logs -f
+```
+
+After startup, attach to zsh as `dev`:
+
+```bash
+docker-compose exec --user dev hnrobert-omz-installer-test zsh
 ```
 
 To stop and clean up:
@@ -36,8 +43,3 @@ To stop and clean up:
 ```bash
 docker-compose down
 ```
-
-## Font recommendation
-
-For best glyph rendering with Powerlevel10k, install a Nerd Font such as MesloLGS NF:
-<https://github.com/romkatv/powerlevel10k#fonts>

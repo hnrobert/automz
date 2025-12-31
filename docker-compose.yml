@@ -18,7 +18,13 @@ services:
         apt-get install -y sudo; \
         id -u dev >/dev/null 2>&1 || useradd -m -s /bin/bash dev; \
         echo 'dev ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/dev; \
+        if [ ! -f /home/dev/.omz_installed ]; then \
         chmod +x /workspace/install.sh; \
         su - dev -c 'cd /workspace && ./install.sh'; \
-        exec su - dev -c '/bin/zsh -i'",
+        touch /home/dev/.omz_installed; \
+        else \
+        echo '[INFO] installer already completed; skipping.'; \
+        fi; \
+        echo 'Now you can start a zsh shell in this container by running: docker-compose exec --user dev hnrobert-omz-installer-test zsh'; \
+        exec tail -f /dev/null",
       ]
