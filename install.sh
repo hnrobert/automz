@@ -30,7 +30,14 @@ log_error() {
 	echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -n "${BASH_SOURCE:-}" ]; then
+	script_path="${BASH_SOURCE[0]}"
+elif [ -n "${0:-}" ]; then
+	script_path="$0"
+else
+	script_path="."
+fi
+SCRIPT_DIR="$(cd "$(dirname "$script_path")" >/dev/null 2>&1 && pwd)"
 CURRENT_USER="${USER:-$(id -un)}"
 P10K_URL_DEFAULT="https://raw.githubusercontent.com/hnrobert/hnrobert-omz-installer/main/.p10k.zsh"
 P10K_URL="${P10K_URL:-$P10K_URL_DEFAULT}"
