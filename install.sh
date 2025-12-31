@@ -39,7 +39,7 @@ else
 fi
 SCRIPT_DIR="$(cd "$(dirname "$script_path")" >/dev/null 2>&1 && pwd)"
 CURRENT_USER="${USER:-$(id -un)}"
-P10K_URL_DEFAULT="https://raw.githubusercontent.com/hnrobert/hnrobert-omz-installer/main/.p10k.zsh"
+P10K_URL_DEFAULT="https://raw.githubusercontent.com/hnrobert/automz/main/.p10k.zsh"
 P10K_URL="${P10K_URL:-$P10K_URL_DEFAULT}"
 
 check_root() {

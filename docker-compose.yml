@@ -1,7 +1,7 @@
 services:
-  hnrobert-omz-installer-test:
+  automz-test:
     image: ubuntu:22.04
-    container_name: hnrobert-omz-installer-test
+    container_name: automz-test
     stdin_open: true
     tty: true
     working_dir: /workspace
@@ -25,6 +25,6 @@ services:
         else \
         echo '[INFO] installer already completed; skipping.'; \
         fi; \
-        echo 'Now you can start a zsh shell in this container by running: docker-compose exec --user dev hnrobert-omz-installer-test zsh'; \
+        echo 'Now you can start a zsh shell in this container by running: docker-compose exec --user dev automz-test zsh'; \
         exec tail -f /dev/null",
       ]

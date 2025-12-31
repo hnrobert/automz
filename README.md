@@ -1,4 +1,4 @@
-# hnrobert-omz-installer
+# automz - Oh My Zsh Automated Installer
 
 Automated installer for Zsh + Oh My Zsh + zsh-autosuggestions + zsh-syntax-highlighting + Powerlevel10k using the included `.p10k.zsh` theme.
 
@@ -18,7 +18,7 @@ Automated installer for Zsh + Oh My Zsh + zsh-autosuggestions + zsh-syntax-highl
 
 ```bash
 # Copy this and paste in your bash, and run it, and the installation will run automatically
-curl -fsSL https://raw.githubusercontent.com/hnrobert/hnrobert-omz-installer/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hnrobert/automz/main/install.sh | bash
 ```
 
 The script installs needed dependencies (git, curl, etc.) if they are missing. You can also run `exec zsh` or open a new terminal session.
@@ -38,7 +38,7 @@ docker-compose up -d && docker-compose logs -f
 When the instruction `[SUCCESS] All done.` appears and the container idles, you may attach to zsh as `dev` and start trying it out:
 
 ```bash
-docker-compose exec --user dev hnrobert-omz-installer-test zsh
+docker-compose exec --user dev automz-test zsh
 ```
 
 To stop and clean up:
