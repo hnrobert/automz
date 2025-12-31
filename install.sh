@@ -2,7 +2,7 @@
 
 # =============================================================================
 # Oh My Zsh + Powerlevel10k installer
-# Targets: Ubuntu/Debian
+# Targets: Ubuntu/Debian and macOS
 # Installs: zsh, oh-my-zsh, zsh-autosuggestions, zsh-syntax-highlighting, p10k
 # =============================================================================
 
@@ -41,6 +41,7 @@ SCRIPT_DIR="$(cd "$(dirname "$script_path")" >/dev/null 2>&1 && pwd)"
 CURRENT_USER="${USER:-$(id -un)}"
 P10K_URL_DEFAULT="https://raw.githubusercontent.com/hnrobert/automz/main/.p10k.zsh"
 P10K_URL="${P10K_URL:-$P10K_URL_DEFAULT}"
+OS_TYPE="$(uname -s)"
 
 check_root() {
 	if [ "$EUID" -eq 0 ]; then
@@ -54,10 +55,35 @@ check_root() {
 }
 
 install_dependencies() {
-	log_info "Updating package index..."
+	log_info "Installing dependencies (zsh, git, curl, wget, fonts)..."
+
+	if [ "$OS_TYPE" = "Darwin" ]; then
+		missing=()
+		for bin in zsh git curl wget; do
+			if ! command -v "$bin" >/dev/null 2>&1; then
+				missing+=("$bin")
+			fi
+		done
+
+		if [ ${#missing[@]} -eq 0 ]; then
+			log_success "Dependencies already present (macOS)."
+			return
+		fi
+
+		if command -v brew >/dev/null 2>&1; then
+			log_info "Using Homebrew to install: ${missing[*]}"
+			brew install "${missing[@]}" || log_warning "Some packages may have failed; please verify manually."
+		else
+			log_warning "Homebrew not found. Please install: ${missing[*]} manually or install Homebrew first (https://brew.sh)."
+		fi
+		return
+	fi
+
+	# Default to Debian/Ubuntu apt path
+	log_info "Updating package index (apt)..."
 	$SUDO apt-get update -y
 
-	log_info "Installing dependencies (zsh, git, curl, wget, fonts)..."
+	log_info "Installing dependencies via apt..."
 	$SUDO apt-get install -y \
 		zsh \
 		git \
@@ -67,7 +93,7 @@ install_dependencies() {
 		locales
 
 	$SUDO locale-gen en_US.UTF-8 || true
-	log_success "Dependencies installed."
+	log_success "Dependencies installed (apt)."
 }
 
 install_oh_my_zsh() {
@@ -195,7 +221,13 @@ set_default_shell() {
 	fi
 
 	local current_shell
-	current_shell="$(getent passwd "$CURRENT_USER" | cut -d: -f7)"
+	current_shell="$(getent passwd "$CURRENT_USER" 2>/dev/null | cut -d: -f7)"
+	if [ -z "$current_shell" ] && [ "$OS_TYPE" = "Darwin" ]; then
+		current_shell="$(dscl . -read "/Users/$CURRENT_USER" UserShell 2>/dev/null | awk '{print $2}')"
+	fi
+	if [ -z "$current_shell" ] && [ -n "${SHELL:-}" ]; then
+		current_shell="$SHELL"
+	fi
 
 	if [ "$current_shell" = "$zsh_path" ]; then
 		log_warning "zsh is already the default shell."
