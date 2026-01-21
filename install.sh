@@ -168,6 +168,11 @@ configure_zshrc() {
 		echo 'DISABLE_UPDATE_PROMPT="true"' >>"$zshrc"
 	fi
 
+	# Ensure zstyle update mode is not commented out
+	if grep -q "^# *zstyle ':omz:update' mode disabled" "$zshrc"; then
+		sed -i "s|^# *zstyle ':omz:update' mode disabled|zstyle ':omz:update' mode disabled|" "$zshrc"
+	fi
+
 	if grep -q "^ZSH_THEME=" "$zshrc"; then
 		sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' "$zshrc"
 	else
